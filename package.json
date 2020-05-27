@@ -1,0 +1,69 @@
+{
+  "author": "Robert Smieja",
+  "description": "Template repository for a Typescript-based Node.js project",
+  "devDependencies": {
+    "@babel/core": "^7.10.0",
+    "@babel/preset-env": "^7.10.0",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.5",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "lint-staged": "^10.2.6",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.3"
+  },
+  "engines": {
+    "node": ">=10",
+    "npm": ">=6"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": [
+        "lint-staged"
+      ]
+    }
+  },
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "template",
+    "babel"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "src/*.{js,ts,jsx,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{js,ts,jsx,tsx,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "main": "dist/index.js",
+  "name": "typescript-template",
+  "private": true,
+  "scripts": {
+    "build": "npm-run-all --parallel build:js lint",
+    "build:js": "tsc",
+    "clean": "rimraf dist/",
+    "lint": "eslint ./src/**/*",
+    "lint:staged": "lint-staged",
+    "lint:fix": "eslint --fix ./src/**/*",
+    "prettier": "prettier --write '*.{js,ts,jsx,tsx,json,md}'",
+    "prepare": "npm-run-all clean build",
+    "prepublishOnly": "npm-run-all --parallel test lint",
+    "prestart": "npm run-script build",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "version": "npm run lint:fix && git add -A src"
+  },
+  "version": "0.0.1"
+}
