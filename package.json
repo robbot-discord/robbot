@@ -1,7 +1,7 @@
 {
   "author": "Robert Smieja",
   "dependencies": {
-    "@robbot/robbot-core": "0.0.1"
+    "@robbot/robbot-core": "^0.0.3"
   },
   "description": "RobBot, a Discord bot",
   "devDependencies": {
@@ -21,6 +21,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "ts-node": "^8.10.1",
     "typescript": "^3.9.3"
   },
   "engines": {
@@ -68,8 +69,8 @@
     "lint:fix": "eslint --fix ./src/**/*",
     "lint:staged": "lint-staged",
     "prepublishOnly": "npm-run-all --serial clean build --parallel test lint",
-    "prestart": "npm run-script build",
     "prettier": "prettier --write \"./**/*.{js,ts,jsx,tsx,json,md}\"",
+    "start": "ts-node src/index.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch --passWithNoTests",
     "version": "npm run lint:fix && git add -A src"
