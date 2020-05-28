@@ -1,0 +1,29 @@
+apiVersion: skaffold/v1
+kind: Config
+metadata:
+  name: robbot
+build:
+  artifacts:
+    - image: us.gcr.io/robbot-discord/robbot
+deploy:
+  kubectl:
+    manifests:
+      - k8s/deployment.yaml
+profiles:
+  - name: kaniko
+    build:
+      artifacts:
+        - image: us.gcr.io/robbot-discord/robbot
+          kaniko:
+            buildContext:
+              localDir: {}
+            # cache: {}
+            image: gcr.io/kaniko-project/executor:debug
+            reproducible: true
+      cluster:
+        pullSecretName: "kaniko-secret"
+        namespace: jenkins
+  - name: googleCloudBuild
+    build:
+      googleCloudBuild:
+        projectId: robbot-discord

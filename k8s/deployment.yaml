@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: robbot-discord
+  name: robbot-discord
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: robbot-discord
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: robbot-discord
+    spec:
+      containers:
+        - env:
+            - name: DISCORD_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: robbot-discord-config
+                  key: DISCORD_API_TOKEN
+          image: us.gcr.io/robbot-discord/robbot-discord:latest
+          imagePullPolicy: IfNotPresent
+          name: robbot-discord
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"       
+          restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
