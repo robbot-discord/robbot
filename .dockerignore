@@ -1,0 +1,38 @@
+# Git
+.git
+.gitattributes
+.gitignore
+
+# Code output
+dist/
+coverage/
+lib/
+
+# 3rd party libraries
+node_modules/
+
+# Logs
+npm-debug.log
+
+# IDE/Configuration files
+.devcontainer/
+.ebextensions/
+.github/
+.idea/
+.terraform/
+.vagrant/
+.vscode/
+
+# Build files
+k8s/
+
+.dockerignore
+Dockerfile
+buildspec.yaml
+cloudbuild.yaml
+Jenkinsfile
+skaffold.yaml
+
+# Documentation
+LICENSE
+README.md
