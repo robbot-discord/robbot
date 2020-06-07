@@ -2,7 +2,6 @@ import {
   createClient,
   createDefaultConfiguration,
   LogLevel,
-  runClient,
 } from "@robbot/robbot-core"
 import {
   createLoggingLevelFilter,
