@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: robbot-discord
-  name: robbot-discord
+    app: robbot
+  name: robbot
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: robbot-discord
+      app: robbot
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: robbot-discord
+        app: robbot
     spec:
       containers:
         - env:
@@ -27,13 +27,13 @@ spec:
                 secretKeyRef:
                   name: robbot-discord-config
                   key: DISCORD_API_TOKEN
-          image: us.gcr.io/robbot-discord/robbot-discord:latest
+          image: us.gcr.io/robbot-discord/robbot:latest
           imagePullPolicy: IfNotPresent
-          name: robbot-discord
+          name: robbot
           resources:
             limits:
-              cpu: "1"
+              cpu: "2"
               memory: "1Gi"       
-          restartPolicy: Always
+      restartPolicy: Always
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
