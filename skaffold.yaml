@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta4
+apiVersion: skaffold/v2beta5
 kind: Config
 metadata:
   name: robbot
@@ -17,9 +17,6 @@ profiles:
       kaniko:
         image: gcr.io/kaniko-project/executor:debug
         reproducible: true
-    cluster:
-      pullSecretName: kaniko-secret
-      namespace: jenkins
 - name: googleCloudBuild
   build:
     googleCloudBuild:
