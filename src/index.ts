@@ -9,6 +9,8 @@ import {
   LogLevelFilterConfiguration,
 } from "@robbot/logging-filter"
 import { createServerFilterMiddleware } from "@robbot/per-server-event-handlers"
+import { Message, TextChannel } from "discord.js"
+import { handleMessageWithLink } from "./handlers/message"
 
 const apiToken = process.env.DISCORD_API_TOKEN
 
@@ -27,6 +29,20 @@ const loggingConfiguration: LogLevelFilterConfiguration = {
 configuration.middleware = {
   eventHandlerMiddleware: [
     createServerFilterMiddleware({
+      // personal discord server
+      "363079999462309908": {
+        message: (message: Message) => {
+          const messageChannel = message.channel
+          const messageAuthor = message.author
+
+          if (messageChannel && messageAuthor && !messageAuthor.bot) {
+            if (messageChannel instanceof TextChannel) {
+              handleMessageWithLink(message, configuration.logger)
+              return
+            }
+          }
+        },
+      },
       defaultEventHandlers: configuration.eventHandlers as EventHandlers,
     }),
   ],
