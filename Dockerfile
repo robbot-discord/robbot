@@ -19,8 +19,9 @@ WORKDIR /home/node/robbot/
 
 USER node
 COPY --chown=node:node . .
-RUN pnpm it && \
-    pnpm run build && \
+RUN pnpm install
+RUN pnpm run build && \
+    pnpm test && \
     pnpm prune --production && \
     pnpm store prune
 
