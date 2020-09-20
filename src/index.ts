@@ -31,13 +31,20 @@ configuration.middleware = {
     createServerFilterMiddleware({
       // personal discord server
       "363079999462309908": {
-        message: async (message: Message) => {
+        message: (message: Message) => {
           const messageChannel = message.channel
           const messageAuthor = message.author
 
           if (messageChannel && messageAuthor && !messageAuthor.bot) {
             if (messageChannel instanceof TextChannel) {
-              await handleMessageWithLink(message, configuration.logger)
+              handleMessageWithLink(
+                message,
+                configuration.logger
+              ).catch((error) =>
+                configuration.logger.error(
+                  `Error in handleMessageWithLink(): ${error}`
+                )
+              )
             }
           }
         },
