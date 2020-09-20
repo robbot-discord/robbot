@@ -1,4 +1,4 @@
-FROM node:14.4.0-alpine3.11
+FROM node:14.11.0-alpine3.11
 ENV NPM_CONFIG_LOGLEVEL warn
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
@@ -12,19 +12,20 @@ ENV NPM_CONFIG_LOGLEVEL warn
 # RUN apk add --no-cache --virtual build-dependencies \
 #     python \
 #     build-base
-
+RUN npm i -g pnpm
 # Create app directory
 RUN mkdir -p /home/node/robbot/node_modules && chown -R node:node /home/node/robbot
 WORKDIR /home/node/robbot/
 
 USER node
 COPY --chown=node:node . .
-RUN npm cit && \
-    npm run build && \
-    npm prune --production
+RUN pnpm it && \
+    pnpm run build && \
+    pnpm prune --production && \
+    pnpm store prune
 
 # USER root
 # RUN apk del build-dependencies
 
 USER node
-CMD [ "npm", "start" ]
+CMD [ "pnpm", "start" ]
