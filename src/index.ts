@@ -1,12 +1,14 @@
 import {
   createClient,
   createDefaultConfiguration,
+  EventHandlers,
   LogLevel,
 } from "@robbot/robbot-core"
 import {
   createLoggingLevelFilter,
   LogLevelFilterConfiguration,
-} from "@robbot/robbot-core/dist/middleware/logging"
+} from "@robbot/logging-filter"
+import { createServerFilterMiddleware } from "@robbot/per-server-event-handlers"
 
 const apiToken = process.env.DISCORD_API_TOKEN
 
@@ -23,9 +25,17 @@ const loggingConfiguration: LogLevelFilterConfiguration = {
 }
 
 configuration.middleware = {
+  eventHandlerMiddleware: [
+    createServerFilterMiddleware({
+      defaultEventHandlers: configuration.eventHandlers as EventHandlers,
+    }),
+  ],
   loggingMiddleware: [createLoggingLevelFilter(loggingConfiguration)],
 }
 
 const robBot = createClient(configuration)
 
-robBot.run().catch(() => process.exit(1))
+robBot.run().catch((error) => {
+  console.error("Error received:", error)
+  process.exit(1)
+})
