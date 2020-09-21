@@ -49,6 +49,16 @@ configuration.middleware = {
           }
         },
       },
+      // static init discord
+      "702260036105142282": {
+        message: (message: Message) => {
+          const channel = message.channel
+          // bot-spam text channel
+          if (channel.id !== "757436038586040401") return
+
+          message.reply("Hello I am RobBot.")
+        },
+      },
       defaultEventHandlers: configuration.eventHandlers as EventHandlers,
     }),
   ],
