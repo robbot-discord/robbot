@@ -5,7 +5,6 @@ import fs from "fs"
 import getStream from "get-stream"
 import os from "os"
 import path, { sep } from "path"
-import puppeteer from "puppeteer"
 import { Stream } from "stream"
 import { v4 as uuid } from "uuid"
 
@@ -95,7 +94,7 @@ const createArchiveLinks = async (url: URL, logger: Logger) => {
 export const handleMessageWithLink = async (
   message: Message,
   logger: Logger
-): Promise<void> => {
+): Promise<Message | undefined> => {
   const messageChannel = message.channel
 
   const linkUrls = getLinksInString(message.content)
@@ -105,7 +104,7 @@ export const handleMessageWithLink = async (
     messageChannel === undefined ||
     !(messageChannel instanceof TextChannel)
   ) {
-    return
+    return undefined
   }
 
   const messageTextChannel = messageChannel
@@ -131,7 +130,7 @@ export const handleMessageWithLink = async (
           fileExt
         )
         const tmpFileBuffer = await fs.promises.readFile(tmpFilePath)
-        await messageTextChannel.send(undefined, {
+        return await messageTextChannel.send(undefined, {
           files: [
             { attachment: tmpFileBuffer, name: `${fileName}.${fileExt}` },
           ],
@@ -141,28 +140,12 @@ export const handleMessageWithLink = async (
         contentType.includes("text/html") &&
         (url.origin.includes("4cdn") || url.origin.includes("4chan"))
       ) {
-        const browser = await puppeteer.launch({
-          executablePath: "/usr/bin/chromium-browser",
+        const archiveLinks = await createArchiveLinks(url, logger)
+        const archiveLink = archiveLinks[0]
+
+        return await messageTextChannel.send(archiveLink, {
+          embed: undefined,
         })
-        try {
-          const page = await browser.newPage()
-          await page.goto(url.href, {
-            waitUntil: "networkidle2",
-          })
-          await page.emulateMediaType("screen")
-          const pdfBuffer = await page.pdf({ format: "Letter" })
-
-          const archiveLinks = await createArchiveLinks(url, logger)
-          const archiveLink = archiveLinks[0]
-
-          await messageTextChannel.send(archiveLink, {
-            embed: undefined,
-            files: [{ attachment: pdfBuffer, name: `${pathEnding}.pdf` }],
-          })
-        } finally {
-          await browser.close()
-        }
-        return
       }
     }
   }
