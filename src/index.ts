@@ -56,6 +56,8 @@ configuration.middleware = {
           // bot-spam text channel
           if (channel.id !== "757436038586040401") return
 
+          if (message.author.bot) return
+
           message.reply("Hello I am RobBot.")
         },
       },
