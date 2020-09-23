@@ -1,7 +1,7 @@
 FROM node:14.11.0-alpine3.12 as build
 ENV NPM_CONFIG_LOGLEVEL warn
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # RUN apk add --no-cache \
 #     ffmpeg \
