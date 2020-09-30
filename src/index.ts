@@ -64,7 +64,9 @@ configuration.middleware = {
       defaultEventHandlers: configuration.eventHandlers as EventHandlers,
     }),
   ],
-  loggingMiddleware: [createLoggingLevelFilter(loggingConfiguration)],
+  loggingMiddleware: [
+    // createLoggingLevelFilter(loggingConfiguration)
+  ],
 }
 
 const robBot = createClient(configuration)
