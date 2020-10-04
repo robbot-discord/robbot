@@ -1,4 +1,4 @@
-FROM node:14.11.0-alpine3.12 as build
+FROM node:14.12.0-alpine3.12 as build
 ENV NPM_CONFIG_LOGLEVEL warn
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
@@ -26,7 +26,7 @@ RUN pnpm install && \
 
 # ---
 
-FROM node:14.11.0-alpine3.12
+FROM node:14.12.0-alpine3.12
 
 RUN mkdir -p /home/node/robbot/node_modules && \
     chown -R node:node /home/node/robbot
