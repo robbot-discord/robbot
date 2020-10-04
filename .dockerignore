@@ -9,6 +9,8 @@ coverage/
 lib/
 
 # 3rd party libraries
+middleware/**/node_modules/
+packages/**/node_modules/
 node_modules/
 
 # Logs
