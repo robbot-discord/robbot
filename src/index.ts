@@ -32,8 +32,7 @@ configuration.middleware = {
       // personal discord server
       "363079999462309908": {
         message: (message: Message) => {
-          const messageChannel = message.channel
-          const messageAuthor = message.author
+          const { channel: messageChannel, author: messageAuthor } = message
 
           if (messageChannel && messageAuthor && !messageAuthor.bot) {
             if (messageChannel instanceof TextChannel) {
@@ -64,9 +63,7 @@ configuration.middleware = {
       defaultEventHandlers: configuration.eventHandlers as EventHandlers,
     }),
   ],
-  loggingMiddleware: [
-    // createLoggingLevelFilter(loggingConfiguration)
-  ],
+  loggingMiddleware: [createLoggingLevelFilter(loggingConfiguration)],
 }
 
 const robBot = createClient(configuration)

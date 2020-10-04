@@ -104,10 +104,11 @@ export const handleMessageWithLink = async (
     messageChannel === undefined ||
     !(messageChannel instanceof TextChannel)
   ) {
+    logger.info("No links in message found")
     return undefined
   }
 
-  const messageTextChannel = messageChannel
+  logger.info(`Found links in message: <${linkUrls}>`)
 
   for (const url of linkUrls) {
     const response = await axios.get<Stream>(url.href, {
@@ -130,7 +131,7 @@ export const handleMessageWithLink = async (
           fileExt
         )
         const tmpFileBuffer = await fs.promises.readFile(tmpFilePath)
-        return await messageTextChannel.send(undefined, {
+        return await messageChannel.send(undefined, {
           files: [
             { attachment: tmpFileBuffer, name: `${fileName}.${fileExt}` },
           ],
@@ -143,7 +144,7 @@ export const handleMessageWithLink = async (
         const archiveLinks = await createArchiveLinks(url, logger)
         const archiveLink = archiveLinks[0]
 
-        return await messageTextChannel.send(archiveLink, {
+        return await messageChannel.send(archiveLink, {
           embed: undefined,
         })
       }
