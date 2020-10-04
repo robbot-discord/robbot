@@ -1,26 +1,21 @@
 {
   "author": "Robert Smieja",
   "dependencies": {
-    "@robbot/logging-filter": "workspace:0.0.7",
-    "@robbot/per-server-event-handlers": "workspace:0.0.7",
-    "@robbot/puppeteer-pdf": "workspace:0.0.5",
-    "@robbot/robbot-core": "workspace:^0.0.13",
-    "axios": "^0.20.0",
+    "@types/ramda": "^0.27.19",
+    "@types/ws": "^7.2.6",
     "discord.js": "^12.3.1",
-    "get-stream": "^6.0.0",
-    "uuid": "^8.3.0"
+    "immer": "^7.0.9",
+    "ramda": "^0.27.1"
   },
-  "description": "RobBot, a Discord bot",
+  "description": "Core of RobBot, a Discord bot",
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.2",
-    "@types/puppeteer": "^3.0.2",
-    "@types/uuid": "^8.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "@typescript-eslint/parser": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -30,16 +25,15 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
-    "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
-  },
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6"
   },
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=12",
+    "pnpm": ">=5"
+  },
   "husky": {
     "hooks": {
       "pre-commit": [
@@ -64,12 +58,12 @@
     ]
   },
   "main": "dist/index.js",
-  "name": "@robbot/robbot",
-  "private": false,
+  "name": "@robbot/robbot-core",
   "publishConfig": {
     "access": "public"
   },
-  "repository": "https://github.com/robbot-discord/robbot",
+  "private": false,
+  "repository": "https://github.com/robbot-discord/robbot-core",
   "scripts": {
     "build": "npm-run-all --parallel build:js lint",
     "build:js": "tsc",
@@ -77,12 +71,13 @@
     "lint": "eslint ./src/**/*",
     "lint:fix": "eslint --fix ./src/**/*",
     "lint:staged": "lint-staged",
+    "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "npm-run-all --serial clean build --parallel test lint",
+    "prestart": "npm run-script lint",
     "prettier": "prettier --write \"./**/*.{js,ts,jsx,tsx,json,md}\"",
-    "start": "node dist/index.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch --passWithNoTests",
     "version": "npm run lint:fix && git add -A src"
   },
-  "version": "0.0.0"
+  "version": "0.0.13"
 }
