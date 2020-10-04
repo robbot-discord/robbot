@@ -40,5 +40,13 @@ COPY --from=build \
     --chown=node:node \
     /home/node/robbot/dist/ ./dist/
 
+COPY --from=build \
+    --chown=node:node \
+    /home/node/robbot/packages/ ./packages/
+
+COPY --from=build \
+    --chown=node:node \
+    /home/node/robbot/middleware/ ./middleware/
+
 USER node
 CMD [ "node", "./dist/index.js" ]
