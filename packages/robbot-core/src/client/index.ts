@@ -34,36 +34,30 @@ export class RobBotClient extends Client {
         typeof handlersOrFunc === "object"
           ? () => handlersOrFunc
           : handlersOrFunc
+      const reducedEventHandlerMiddleware =
+        eventHandlerMiddleware?.reduce((previousCreator, currentMiddleware) => {
+          return currentMiddleware(previousCreator)
+        }, eventHandlerCreator) ?? eventHandlerCreator
+
+      const defaultLoggerCreator: LoggerCreator = () => logger
+      const reducedLoggingMiddleware =
+        loggingMiddleware?.reduce(
+          (newLogger, currentMiddleware): LoggerCreator =>
+            currentMiddleware(newLogger),
+          defaultLoggerCreator
+        ) ?? defaultLoggerCreator
+
+      const defaultStorageCreator: StorageHandlerCreator = () => storage
+      const reducedStorageMiddleware =
+        storageMiddleware?.reduce(
+          (newStorage, currentMiddleware): StorageHandlerCreator =>
+            currentMiddleware(newStorage),
+          defaultStorageCreator
+        ) ?? defaultStorageCreator
 
       client.configuration = produce(client.configuration, (draft) => {
-        const reducedEventHandlerMiddleware =
-          eventHandlerMiddleware?.reduce(
-            (previousCreator, currentMiddleware) => {
-              return currentMiddleware(previousCreator)
-            },
-            eventHandlerCreator
-          ) ?? eventHandlerCreator
-
         draft.eventHandlers = reducedEventHandlerMiddleware(client)
-
-        const defaultLoggerCreator: LoggerCreator = () => logger
-        const reducedLoggingMiddleware =
-          loggingMiddleware?.reduce(
-            (newLogger, currentMiddleware): LoggerCreator =>
-              currentMiddleware(newLogger),
-            defaultLoggerCreator
-          ) ?? defaultLoggerCreator
-
         draft.logger = reducedLoggingMiddleware(client)
-
-        const defaultStorageCreator: StorageHandlerCreator = () => storage
-        const reducedStorageMiddleware =
-          storageMiddleware?.reduce(
-            (newStorage, currentMiddleware): StorageHandlerCreator =>
-              currentMiddleware(newStorage),
-            defaultStorageCreator
-          ) ?? defaultStorageCreator
-
         draft.storage = reducedStorageMiddleware(client)
       })
     }
