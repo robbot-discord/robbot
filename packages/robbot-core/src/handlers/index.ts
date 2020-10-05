@@ -25,10 +25,7 @@ import { Logger } from "../logging/types"
 import { RobBotClient } from "../client"
 import { EventHandlers } from "./types"
 
-export const createDefaultHandlers = (
-  client: RobBotClient,
-  logger: Logger
-): EventHandlers => {
+export const createDefaultHandlers = (client: RobBotClient, logger: Logger): EventHandlers => {
   // per Events section https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-channelCreate
   const defaultEventHandlers: EventHandlers = {
     channelCreate: (channel: Channel) => {
@@ -114,31 +111,18 @@ export const createDefaultHandlers = (
 
       return { member }
     },
-    guildMembersChunk: (
-      members: Collection<Snowflake, GuildMember | PartialGuildMember>,
-      guild: Guild
-    ) => {
+    guildMembersChunk: (members: Collection<Snowflake, GuildMember | PartialGuildMember>, guild: Guild) => {
       logger.debug(`Guild member chunk received: <${members}>, for <${guild}>`)
 
       return { members, guild }
     },
-    guildMemberSpeaking: (
-      member: GuildMember | PartialGuildMember,
-      speaking: Readonly<Speaking>
-    ) => {
-      logger.debug(
-        `Guild member speaking status change: <${member}> to <${speaking}>`
-      )
+    guildMemberSpeaking: (member: GuildMember | PartialGuildMember, speaking: Readonly<Speaking>) => {
+      logger.debug(`Guild member speaking status change: <${member}> to <${speaking}>`)
 
       return { member, speaking }
     },
-    guildMemberUpdate: (
-      oldMember: GuildMember | PartialGuildMember,
-      newMember: GuildMember | PartialGuildMember
-    ) => {
-      logger.debug(
-        `Guild member updated. From: <${oldMember}>, to <${newMember}>`
-      )
+    guildMemberUpdate: (oldMember: GuildMember | PartialGuildMember, newMember: GuildMember | PartialGuildMember) => {
+      logger.debug(`Guild member updated. From: <${oldMember}>, to <${newMember}>`)
 
       return { oldMember, newMember }
     },
@@ -169,25 +153,17 @@ export const createDefaultHandlers = (
 
       return { message }
     },
-    messageDeleteBulk: (
-      messages: Collection<Snowflake, Message | PartialMessage>
-    ) => {
+    messageDeleteBulk: (messages: Collection<Snowflake, Message | PartialMessage>) => {
       logger.debug(`Messages bulk deleted: <${messages}>`)
 
       return { messages }
     },
-    messageReactionAdd: (
-      messageReaction: MessageReaction,
-      user: User | PartialUser
-    ) => {
+    messageReactionAdd: (messageReaction: MessageReaction, user: User | PartialUser) => {
       logger.debug(`Message reaction added <${messageReaction}> by <${user}>`)
 
       return { messageReaction, user }
     },
-    messageReactionRemove: (
-      messageReaction: MessageReaction,
-      user: User | PartialUser
-    ) => ({
+    messageReactionRemove: (messageReaction: MessageReaction, user: User | PartialUser) => ({
       messageReaction,
       user,
     }),
@@ -202,23 +178,13 @@ export const createDefaultHandlers = (
 
       return { reaction }
     },
-    messageUpdate: (
-      oldMessage: Message | PartialMessage,
-      newMessage: Message | PartialMessage
-    ) => {
+    messageUpdate: (oldMessage: Message | PartialMessage, newMessage: Message | PartialMessage) => {
       logger.debug(`Message updated from <${oldMessage}> to <${newMessage}>`)
 
       return { oldMessage, newMessage }
     },
-    presenceUpdate: (
-      oldPresence: Presence | undefined,
-      newPresence: Presence
-    ) => {
-      logger.debug(
-        `Presence updated from <${JSON.stringify(
-          oldPresence
-        )}> to <${JSON.stringify(newPresence)}>`
-      )
+    presenceUpdate: (oldPresence: Presence | undefined, newPresence: Presence) => {
+      logger.debug(`Presence updated from <${JSON.stringify(oldPresence)}> to <${JSON.stringify(newPresence)}>`)
 
       return { oldPresence, newPresence }
     },
@@ -230,10 +196,7 @@ export const createDefaultHandlers = (
     ready: () => {
       logger.info(`Logged in as ${client.user?.tag}!`)
 
-      const activityString = `last updated : ${new Date().toLocaleString(
-        "en-US",
-        { timeZone: "America/New_York" }
-      )}`
+      const activityString = `last updated : ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })}`
 
       client.user
         ?.setActivity(activityString)
@@ -266,16 +229,12 @@ export const createDefaultHandlers = (
       return { event, id }
     },
     shardError: (error: Error, shardID: number) => {
-      logger.debug(
-        `Error received for shard id <${shardID}>. Error: <${error}>`
-      )
+      logger.debug(`Error received for shard id <${shardID}>. Error: <${error}>`)
 
       return { error, shardID }
     },
     shardReady: (id: number, unavailableGuilds?: Set<string>) => {
-      logger.debug(
-        `Shard id <${id}> ready, unavailable guilds: <${unavailableGuilds}>`
-      )
+      logger.debug(`Shard id <${id}> ready, unavailable guilds: <${unavailableGuilds}>`)
 
       return { id, unavailableGuilds }
     },
@@ -285,16 +244,11 @@ export const createDefaultHandlers = (
       return { id }
     },
     shardResume: (id: number, replayedEvents: number) => {
-      logger.debug(
-        `Resumed shard with id <${id}>, number of replayed events: <${replayedEvents}>`
-      )
+      logger.debug(`Resumed shard with id <${id}>, number of replayed events: <${replayedEvents}>`)
 
       return { id, replayedEvents }
     },
-    typingStart: (
-      channel: Channel | PartialDMChannel,
-      user: User | PartialUser
-    ) => {
+    typingStart: (channel: Channel | PartialDMChannel, user: User | PartialUser) => {
       logger.debug(`Typing started in <${channel}> by <${user}>`)
 
       return { channel, user }

@@ -1,8 +1,4 @@
-import {
-  EventHandlerMiddleware,
-  Logger,
-  RobBotClient,
-} from "@robbot/robbot-core/dist"
+import { EventHandlerMiddleware, Logger, RobBotClient } from "@robbot/robbot-core/dist"
 import { EventHandlersCreator } from "@robbot/robbot-core/dist/handlers"
 import { DMChannel, Message, MessageAttachment, TextChannel } from "discord.js"
 import { defaultConfig } from "./config"
@@ -41,10 +37,7 @@ export const createPuppeteerPdfMiddleware = (
         message: async (message: Message) => {
           const messageChannel = message.channel
 
-          if (
-            messageChannel instanceof TextChannel ||
-            messageChannel instanceof DMChannel
-          ) {
+          if (messageChannel instanceof TextChannel || messageChannel instanceof DMChannel) {
             const linkUrls = getLinksInString(message.content)
 
             const linksToPdfMap = await createPDFsFromLinks(linkUrls, config)

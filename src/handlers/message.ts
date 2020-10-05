@@ -8,11 +8,7 @@ import path, { sep } from "path"
 import { Stream } from "stream"
 import { v4 as uuid } from "uuid"
 
-const saveStreamToTempFile = async (
-  stream: Stream,
-  fileName: string = uuid(),
-  fileExt = ".tmp"
-): Promise<string> => {
+const saveStreamToTempFile = async (stream: Stream, fileName: string = uuid(), fileExt = ".tmp"): Promise<string> => {
   const osTmpDir = os.tmpdir() + sep
   const tmpDir = fs.promises.mkdtemp(osTmpDir)
   const buffer = await getStream.buffer(stream)
@@ -70,20 +66,12 @@ const createArchiveLinks = async (url: URL, logger: Logger) => {
   for (const { archiveSite, transform } of archiveSites) {
     archiveSite.pathname = url.pathname
     archiveSite.hash = url.hash
-    const transformedArchiveSite = transform
-      ? transform(archiveSite)
-      : archiveSite
+    const transformedArchiveSite = transform ? transform(archiveSite) : archiveSite
 
-    const { status } = await axios
-      .get(transformedArchiveSite.href)
-      .catch((error: AxiosError) => {
-        logger.info(
-          `createArchiveLinks(): ${url.href} => ${transformedArchiveSite.href}` +
-            sep +
-            `Error: ${error}`
-        )
-        return error.response || { status: 404 }
-      })
+    const { status } = await axios.get(transformedArchiveSite.href).catch((error: AxiosError) => {
+      logger.info(`createArchiveLinks(): ${url.href} => ${transformedArchiveSite.href}` + sep + `Error: ${error}`)
+      return error.response || { status: 404 }
+    })
     if (status === 200) {
       validArchiveLinks.push(transformedArchiveSite)
     }
@@ -91,19 +79,12 @@ const createArchiveLinks = async (url: URL, logger: Logger) => {
   return validArchiveLinks
 }
 
-export const handleMessageWithLink = async (
-  message: Message,
-  logger: Logger
-): Promise<Message | undefined> => {
+export const handleMessageWithLink = async (message: Message, logger: Logger): Promise<Message | undefined> => {
   const messageChannel = message.channel
 
   const linkUrls = getLinksInString(message.content)
 
-  if (
-    linkUrls.length === 0 ||
-    messageChannel === undefined ||
-    !(messageChannel instanceof TextChannel)
-  ) {
+  if (linkUrls.length === 0 || messageChannel === undefined || !(messageChannel instanceof TextChannel)) {
     logger.info("No links in message found")
     return undefined
   }
@@ -121,26 +102,14 @@ export const handleMessageWithLink = async (
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const contentType = response.headers["content-type"] as string
 
-      if (
-        contentType.startsWith("image") &&
-        (url.origin.includes("4cdn") || url.origin.includes("4chan"))
-      ) {
-        const tmpFilePath = await saveStreamToTempFile(
-          response.data,
-          fileName,
-          fileExt
-        )
+      if (contentType.startsWith("image") && (url.origin.includes("4cdn") || url.origin.includes("4chan"))) {
+        const tmpFilePath = await saveStreamToTempFile(response.data, fileName, fileExt)
         const tmpFileBuffer = await fs.promises.readFile(tmpFilePath)
         return await messageChannel.send(undefined, {
-          files: [
-            { attachment: tmpFileBuffer, name: `${fileName}.${fileExt}` },
-          ],
+          files: [{ attachment: tmpFileBuffer, name: `${fileName}.${fileExt}` }],
         })
         return
-      } else if (
-        contentType.includes("text/html") &&
-        (url.origin.includes("4cdn") || url.origin.includes("4chan"))
-      ) {
+      } else if (contentType.includes("text/html") && (url.origin.includes("4cdn") || url.origin.includes("4chan"))) {
         const archiveLinks = await createArchiveLinks(url, logger)
         const archiveLink = archiveLinks[0]
 

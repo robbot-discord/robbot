@@ -1,8 +1,4 @@
-import {
-  LoggingMiddleware,
-  EventHandlerMiddleware,
-  StorageMiddleware,
-} from "../middleware/types"
+import { LoggingMiddleware, EventHandlerMiddleware, StorageMiddleware } from "../middleware/types"
 import { ClientOptions } from "discord.js"
 import { Logger } from "../logging/types"
 import { EventHandlersCreator, EventHandlers } from "../handlers/types"

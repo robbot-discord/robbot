@@ -20,20 +20,12 @@ export class RobBotClient extends Client {
 
   applyMiddleware = (
     client: RobBotClient = this,
-    { eventHandlers: handlersOrFunc, logger, middleware, storage } = this
-      .configuration
+    { eventHandlers: handlersOrFunc, logger, middleware, storage } = this.configuration
   ): void => {
     if (middleware) {
-      const {
-        eventHandlerMiddleware,
-        loggingMiddleware,
-        storageMiddleware,
-      } = middleware
+      const { eventHandlerMiddleware, loggingMiddleware, storageMiddleware } = middleware
 
-      const eventHandlerCreator =
-        typeof handlersOrFunc === "object"
-          ? () => handlersOrFunc
-          : handlersOrFunc
+      const eventHandlerCreator = typeof handlersOrFunc === "object" ? () => handlersOrFunc : handlersOrFunc
       const reducedEventHandlerMiddleware =
         eventHandlerMiddleware?.reduce((previousCreator, currentMiddleware) => {
           return currentMiddleware(previousCreator)
@@ -42,16 +34,14 @@ export class RobBotClient extends Client {
       const defaultLoggerCreator: LoggerCreator = () => logger
       const reducedLoggingMiddleware =
         loggingMiddleware?.reduce(
-          (newLogger, currentMiddleware): LoggerCreator =>
-            currentMiddleware(newLogger),
+          (newLogger, currentMiddleware): LoggerCreator => currentMiddleware(newLogger),
           defaultLoggerCreator
         ) ?? defaultLoggerCreator
 
       const defaultStorageCreator: StorageHandlerCreator = () => storage
       const reducedStorageMiddleware =
         storageMiddleware?.reduce(
-          (newStorage, currentMiddleware): StorageHandlerCreator =>
-            currentMiddleware(newStorage),
+          (newStorage, currentMiddleware): StorageHandlerCreator => currentMiddleware(newStorage),
           defaultStorageCreator
         ) ?? defaultStorageCreator
 
@@ -65,15 +55,10 @@ export class RobBotClient extends Client {
 
   registerEventHandlers = (client: RobBotClient = this): void => {
     const givenEventHandlers = client.configuration.eventHandlers
-    const eventHandlers =
-      typeof givenEventHandlers === "function"
-        ? givenEventHandlers(this)
-        : givenEventHandlers
+    const eventHandlers = typeof givenEventHandlers === "function" ? givenEventHandlers(this) : givenEventHandlers
 
     // TODO is there a type-safe way to do this?
-    const events = (Object.keys(
-      eventHandlers
-    ) as unknown) as (keyof ClientEvents)[]
+    const events = (Object.keys(eventHandlers) as unknown) as (keyof ClientEvents)[]
 
     for (const event of events) {
       const handler = eventHandlers[event]
@@ -83,9 +68,7 @@ export class RobBotClient extends Client {
         } catch (error) {
           const logger = client.configuration.logger
 
-          logger.error(
-            `Uncaught error in event handler! Event: <${event}>, error: <${error}>`
-          )
+          logger.error(`Uncaught error in event handler! Event: <${event}>, error: <${error}>`)
         }
       })
     }
@@ -101,9 +84,7 @@ export class RobBotClient extends Client {
         return
       })
       .catch((error) => {
-        client.configuration.logger.error(
-          `Unexpected error, client crashed: ${error}`
-        )
+        client.configuration.logger.error(`Unexpected error, client crashed: ${error}`)
 
         return
       })

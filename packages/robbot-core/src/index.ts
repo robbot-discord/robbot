@@ -2,9 +2,7 @@ import { RobBotClient } from "./client"
 import { createDefaultConfiguration } from "./configuration"
 import { RobBotConfiguration } from "./configuration/types"
 
-export const createClient = (
-  configurationOrDiscordApiToken: RobBotConfiguration | string
-): RobBotClient => {
+export const createClient = (configurationOrDiscordApiToken: RobBotConfiguration | string): RobBotClient => {
   if (typeof configurationOrDiscordApiToken === "string") {
     const discordApiToken = configurationOrDiscordApiToken
     return new RobBotClient(createDefaultConfiguration(discordApiToken))

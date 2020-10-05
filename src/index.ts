@@ -1,13 +1,5 @@
-import {
-  createClient,
-  createDefaultConfiguration,
-  EventHandlers,
-  LogLevel,
-} from "@robbot/robbot-core"
-import {
-  createLoggingLevelFilter,
-  LogLevelFilterConfiguration,
-} from "@robbot/logging-filter"
+import { createClient, createDefaultConfiguration, EventHandlers, LogLevel } from "@robbot/robbot-core"
+import { createLoggingLevelFilter, LogLevelFilterConfiguration } from "@robbot/logging-filter"
 import { createServerFilterMiddleware } from "@robbot/per-server-event-handlers"
 import { Message, TextChannel } from "discord.js"
 import { handleMessageWithLink } from "./handlers/message"
@@ -15,9 +7,7 @@ import { handleMessageWithLink } from "./handlers/message"
 const apiToken = process.env.DISCORD_API_TOKEN
 
 if (typeof apiToken !== "string") {
-  console.error(
-    `Error, environment variable <DISCORD_API_TOKEN> is not correctly set! Current value is <${apiToken}>`
-  )
+  console.error(`Error, environment variable <DISCORD_API_TOKEN> is not correctly set! Current value is <${apiToken}>`)
   process.exit(1)
 }
 
@@ -36,13 +26,8 @@ configuration.middleware = {
 
           if (messageChannel && messageAuthor && !messageAuthor.bot) {
             if (messageChannel instanceof TextChannel) {
-              handleMessageWithLink(
-                message,
-                configuration.logger
-              ).catch((error) =>
-                configuration.logger.error(
-                  `Error in handleMessageWithLink(): ${error}`
-                )
+              handleMessageWithLink(message, configuration.logger).catch((error) =>
+                configuration.logger.error(`Error in handleMessageWithLink(): ${error}`)
               )
             }
           }

@@ -8,9 +8,7 @@ export const createServerFilterMiddleware = (
   client: RobBotClient,
   configuration: PerServerEventHandlers
 ): EventHandlerMiddleware => {
-  const newMiddleware = (
-    eventHandlersCreator: EventHandlersCreator
-  ): EventHandlersCreator => {
+  const newMiddleware = (eventHandlersCreator: EventHandlersCreator): EventHandlersCreator => {
     const eventHandlers = eventHandlersCreator(client)
     const logger = client.configuration.logger
     const newEventHandlers = produce(eventHandlers, (draft) => {
@@ -20,14 +18,10 @@ export const createServerFilterMiddleware = (
           const guildMessageHandler = configuration[guildSnowflake]?.message
 
           if (guildMessageHandler) {
-            logger.trace(
-              `Found guildMessageHandler for guild.id <${guildSnowflake}>`
-            )
+            logger.trace(`Found guildMessageHandler for guild.id <${guildSnowflake}>`)
             guildMessageHandler(message)
           } else {
-            logger.trace(
-              `No guildMessageHandler found for guild.id <${guildSnowflake}>, using default`
-            )
+            logger.trace(`No guildMessageHandler found for guild.id <${guildSnowflake}>, using default`)
             eventHandlers.message(message)
           }
         }
