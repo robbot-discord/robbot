@@ -13,7 +13,7 @@ if (typeof apiToken !== "string") {
 
 const configuration = createDefaultConfiguration(apiToken)
 const loggingConfiguration: LogLevelFilterConfiguration = {
-  logLevel: LogLevel.DEBUG,
+  logLevel: LogLevel.TRACE,
 }
 
 configuration.middleware = {
