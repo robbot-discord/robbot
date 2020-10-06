@@ -23,8 +23,9 @@ WORKDIR /home/node/robbot/
 USER node
 COPY --chown=node:node . .
 RUN pnpm install && \
-    pnpm run build && \
-    pnpm test
+    pnpm run clean --recursive && \
+    pnpm run build --recursive && \
+    pnpm test --recursive
 
 # ---
 
