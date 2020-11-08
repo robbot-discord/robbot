@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta8
+apiVersion: skaffold/v2beta9
 kind: Config
 metadata:
   name: robbot
@@ -15,8 +15,8 @@ profiles:
     artifacts:
     - image: us.gcr.io/robbot-discord/robbot
       kaniko:
-        image: gcr.io/kaniko-project/executor:debug
         reproducible: true
+        image: gcr.io/kaniko-project/executor:debug
 - name: googleCloudBuild
   build:
     googleCloudBuild:
