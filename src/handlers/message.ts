@@ -102,7 +102,8 @@ export const handleMessageWithLink = async (message: Message, logger: Logger): P
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const contentType = response.headers["content-type"] as string
 
-      if (contentType.startsWith("image") && (url.origin.includes("4cdn") || url.origin.includes("4chan"))) {
+      const isMedia = contentType.startsWith("image") || contentType.startsWith("video")
+      if (isMedia && (url.origin.includes("4cdn") || url.origin.includes("4chan"))) {
         const tmpFilePath = await saveStreamToTempFile(response.data, fileName, fileExt)
         const tmpFileBuffer = await fs.promises.readFile(tmpFilePath)
         return await messageChannel.send(undefined, {
