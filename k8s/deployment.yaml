@@ -4,7 +4,6 @@ metadata:
   labels:
     app: robbot
   name: robbot
-  namespace: default
 spec:
   replicas: 1
   selector:
