@@ -106,15 +106,14 @@ export const handleMessageWithLink = async (message: Message, logger: Logger): P
       if (isMedia && (url.origin.includes("4cdn") || url.origin.includes("4chan"))) {
         const tmpFilePath = await saveStreamToTempFile(response.data, fileName, fileExt)
         const tmpFileBuffer = await fs.promises.readFile(tmpFilePath)
-        return await messageChannel.send(undefined, {
+        return await message.reply(undefined, {
           files: [{ attachment: tmpFileBuffer, name: `${fileName}.${fileExt}` }],
         })
-        return
       } else if (contentType.includes("text/html") && (url.origin.includes("4cdn") || url.origin.includes("4chan"))) {
         const archiveLinks = await createArchiveLinks(url, logger)
         const archiveLink = archiveLinks[0]
 
-        return await messageChannel.send(archiveLink, {
+        return await message.reply(archiveLink, {
           embed: undefined,
         })
       }
