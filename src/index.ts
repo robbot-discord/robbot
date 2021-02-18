@@ -63,7 +63,21 @@ configuration.middleware = {
               }
 
               const appsApi = kc.makeApiClient(AppsV1Api)
-              return appsApi.patchNamespacedDeployment("valheim", "valheim", deployment)
+              // Header as per https://github.com/kubernetes/kubernetes/issues/61103#issuecomment-372641200
+              return appsApi.patchNamespacedDeployment(
+                "valheim",
+                "valheim",
+                deployment,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                  headers: {
+                    "content-type": "application/merge-patch+json",
+                  },
+                }
+              )
             }, minuteInMills)
 
             const resultPromise = rebootFunc()
