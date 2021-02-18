@@ -51,23 +51,32 @@ configuration.middleware = {
               kc.loadFromDefault()
 
               const appsApi = kc.makeApiClient(k8s.AppsV1Api)
-              appsApi.patchNamespacedDeployment("valheim", "valheim", {
-                spec: {
-                  template: {
-                    metadata: {
-                      annotations: {
-                        "app.robbot/restartedAt": `${new Date()}`,
+              appsApi
+                .patchNamespacedDeployment("valheim", "valheim", {
+                  spec: {
+                    template: {
+                      metadata: {
+                        annotations: {
+                          "app.robbot/restartedAt": `${new Date()}`,
+                        },
                       },
                     },
                   },
-                },
-              })
+                })
+                .then(() => {
+                  message.reply("Reboot done")
+                })
+                .catch((error) => {
+                  message.reply(`Error rebooting: ${error}`)
+                })
             }, minuteInMills)
 
             rebootFunc()
           }
 
-          message.reply("I don't recognize that.")
+          if (message.content.startsWith("!")) {
+            message.reply("I don't recognize that.")
+          }
         },
       },
       defaultEventHandlers: configuration.eventHandlers as EventHandlers,
