@@ -50,34 +50,17 @@ configuration.middleware = {
               const kc = new KubeConfig()
               kc.loadFromDefault()
 
-              const deployment = {
-                spec: {
-                  template: {
-                    metadata: {
-                      annotations: {
-                        "app.robbot/restartedAt": `${new Date().toISOString()}`,
-                      },
-                    },
-                  },
+              const jsonPatch = {
+                op: "replace",
+                path: "/spec/template/metadata/annotations",
+                value: {
+                  "app.robbot/restartedAt": `${new Date().toISOString()}`,
                 },
               }
 
               const appsApi = kc.makeApiClient(AppsV1Api)
               // Header as per https://github.com/kubernetes/kubernetes/issues/61103#issuecomment-372641200
-              return appsApi.patchNamespacedDeployment(
-                "valheim",
-                "valheim",
-                deployment,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                {
-                  headers: {
-                    "content-type": "application/json",
-                  },
-                }
-              )
+              return appsApi.patchNamespacedDeployment("valheim", "valheim", jsonPatch)
             }, minuteInMills)
 
             const resultPromise = rebootFunc()
