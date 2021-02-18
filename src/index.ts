@@ -74,7 +74,7 @@ configuration.middleware = {
                 undefined,
                 {
                   headers: {
-                    "content-type": "application/merge-patch+json",
+                    "content-type": "application/json",
                   },
                 }
               )
@@ -89,7 +89,7 @@ configuration.middleware = {
                 .catch((error: Error) => {
                   message.reply(`Error rebooting: ${error}`)
                   configuration.logger.error(`Error rebooting: ${error}
-                  ${JSON.stringify(error)}`)
+                  ${JSON.stringify(error, undefined, 2)}`)
                 })
             return
           }
