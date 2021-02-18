@@ -50,29 +50,32 @@ configuration.middleware = {
               const kc = new KubeConfig()
               kc.loadFromDefault()
 
-              const appsApi = kc.makeApiClient(AppsV1Api)
-              appsApi
-                .patchNamespacedDeployment("valheim", "valheim", {
-                  spec: {
-                    template: {
-                      metadata: {
-                        annotations: {
-                          "app.robbot/restartedAt": `${new Date()}`,
-                        },
+              const deployment = {
+                spec: {
+                  template: {
+                    metadata: {
+                      annotations: {
+                        "app.robbot/restartedAt": `${new Date().toISOString()}`,
                       },
                     },
                   },
-                })
+                },
+              }
+
+              const appsApi = kc.makeApiClient(AppsV1Api)
+              return appsApi.patchNamespacedDeployment("valheim", "valheim", deployment)
+            }, minuteInMills)
+
+            const resultPromise = rebootFunc()
+            resultPromise &&
+              resultPromise
                 .then(() => {
                   message.reply("Reboot done")
                 })
-                .catch((error) => {
+                .catch((error: Error) => {
                   message.reply(`Error rebooting: ${error}
                   Raw JSON: ${JSON.stringify(error)}`)
                 })
-            }, minuteInMills)
-
-            rebootFunc()
             return
           }
 
@@ -90,7 +93,7 @@ configuration.middleware = {
 
 const robBot = createClient(configuration)
 
-robBot.run().catch((error) => {
+robBot.run().catch((error: Error) => {
   console.error("Error received:", error)
   process.exit(1)
 })
