@@ -3,7 +3,7 @@ import { createLoggingLevelFilter, LogLevelFilterConfiguration } from "@robbot/l
 import { createServerFilterMiddleware } from "@robbot/per-server-event-handlers"
 import { Message, TextChannel } from "discord.js"
 import { handleMessageWithLink } from "./handlers/message"
-import k8s from "@kubernetes/client-node"
+import { KubeConfig, AppsV1Api } from "@kubernetes/client-node"
 import _ from "lodash"
 
 const apiToken = process.env.DISCORD_API_TOKEN
@@ -47,10 +47,10 @@ configuration.middleware = {
           if (message.content === "!reboot") {
             const minuteInMills = 60 * 1000
             const rebootFunc = _.throttle(() => {
-              const kc = new k8s.KubeConfig()
+              const kc = new KubeConfig()
               kc.loadFromDefault()
 
-              const appsApi = kc.makeApiClient(k8s.AppsV1Api)
+              const appsApi = kc.makeApiClient(AppsV1Api)
               appsApi
                 .patchNamespacedDeployment("valheim", "valheim", {
                   spec: {
