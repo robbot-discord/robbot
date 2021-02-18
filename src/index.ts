@@ -3,6 +3,8 @@ import { createLoggingLevelFilter, LogLevelFilterConfiguration } from "@robbot/l
 import { createServerFilterMiddleware } from "@robbot/per-server-event-handlers"
 import { Message, TextChannel } from "discord.js"
 import { handleMessageWithLink } from "./handlers/message"
+import k8s from "@kubernetes/client-node"
+import _ from "lodash"
 
 const apiToken = process.env.DISCORD_API_TOKEN
 
@@ -42,7 +44,30 @@ configuration.middleware = {
 
           if (message.author.bot) return
 
-          message.reply("Hello I am RobBot.")
+          if (message.content === "!reboot") {
+            const minuteInMills = 60 * 1000
+            const rebootFunc = _.throttle(() => {
+              const kc = new k8s.KubeConfig()
+              kc.loadFromDefault()
+
+              const appsApi = kc.makeApiClient(k8s.AppsV1Api)
+              appsApi.patchNamespacedDeployment("valheim", "valheim", {
+                spec: {
+                  template: {
+                    metadata: {
+                      annotations: {
+                        "app.robbot/restartedAt": `${new Date()}`,
+                      },
+                    },
+                  },
+                },
+              })
+            }, minuteInMills)
+
+            rebootFunc()
+          }
+
+          message.reply("I don't recognize that.")
         },
       },
       defaultEventHandlers: configuration.eventHandlers as EventHandlers,
