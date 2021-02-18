@@ -67,15 +67,18 @@ configuration.middleware = {
                   message.reply("Reboot done")
                 })
                 .catch((error) => {
-                  message.reply(`Error rebooting: ${error}`)
+                  message.reply(`Error rebooting: ${error}
+                  Raw JSON: ${JSON.stringify(error)}`)
                 })
             }, minuteInMills)
 
             rebootFunc()
+            return
           }
 
           if (message.content.startsWith("!")) {
             message.reply("I don't recognize that.")
+            return
           }
         },
       },
