@@ -52,4 +52,4 @@ COPY --from=build \
     /home/node/robbot/middleware/ ./middleware/
 
 USER node
-CMD [ "node", "./dist/index.js" ]
+CMD [ "node", "--trace-warnings", "./dist/index.js" ]
