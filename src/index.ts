@@ -3,7 +3,7 @@ import { createLoggingLevelFilter, LogLevelFilterConfiguration } from "@robbot/l
 import { createServerFilterMiddleware } from "@robbot/per-server-event-handlers"
 import { Message, TextChannel } from "discord.js"
 import { handleMessageWithLink } from "./handlers/message"
-import { KubeConfig, AppsV1Api } from "@kubernetes/client-node"
+import { KubeConfig, AppsV1Api, PatchUtils } from "@kubernetes/client-node"
 import _ from "lodash"
 
 const apiToken = process.env.DISCORD_API_TOKEN
@@ -60,7 +60,18 @@ configuration.middleware = {
 
               const appsApi = kc.makeApiClient(AppsV1Api)
               // Header as per https://github.com/kubernetes/kubernetes/issues/61103#issuecomment-372641200
-              return appsApi.patchNamespacedDeployment("valheim", "valheim", jsonPatch)
+              // and per https://github.com/kubernetes-client/javascript/blob/master/examples/patch-example.js#L19
+              const options = { headers: { "Content-type": PatchUtils.PATCH_FORMAT_JSON_PATCH } }
+              return appsApi.patchNamespacedDeployment(
+                "valheim",
+                "valheim",
+                jsonPatch,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                options
+              )
             }, minuteInMills)
 
             const resultPromise = rebootFunc()
