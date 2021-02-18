@@ -73,8 +73,9 @@ configuration.middleware = {
                   message.reply("Reboot done")
                 })
                 .catch((error: Error) => {
-                  message.reply(`Error rebooting: ${error}
-                  Raw JSON: ${JSON.stringify(error)}`)
+                  message.reply(`Error rebooting: ${error}`)
+                  configuration.logger.error(`Error rebooting: ${error}
+                  ${JSON.stringify(error)}`)
                 })
             return
           }
