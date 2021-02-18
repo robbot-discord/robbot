@@ -50,13 +50,15 @@ configuration.middleware = {
               const kc = new KubeConfig()
               kc.loadFromDefault()
 
-              const jsonPatch = {
-                op: "replace",
-                path: "/spec/template/metadata/annotations",
-                value: {
-                  "app.robbot/restartedAt": `${new Date().toISOString()}`,
+              const jsonPatch = [
+                {
+                  op: "replace",
+                  path: "/spec/template/metadata/annotations",
+                  value: {
+                    "app.robbot/restartedAt": `${new Date().toISOString()}`,
+                  },
                 },
-              }
+              ]
 
               const appsApi = kc.makeApiClient(AppsV1Api)
               // Header as per https://github.com/kubernetes/kubernetes/issues/61103#issuecomment-372641200
